@@ -74,9 +74,20 @@ namespace Backend.Services.AuthServices
             userAccount.Id = GenerateId();
 
             #region ASSIGN USER ROLE
-            UserRole userRole = await _context.UserRoles
-                .Where(x => x.RoleName == SEEDED_ROLES.DEFAULT_ROLE)
-                .FirstAsync();
+            UserRole userRole = new();
+
+            if (!registerDTO.IsSuperAdmin)
+            {
+                userRole = await _context.UserRoles
+                    .Where(x => x.RoleName == SEEDED_ROLES.DEFAULT_ROLE)
+                    .FirstAsync();
+            }
+            else
+            {
+                userRole = await _context.UserRoles
+                    .Where(x => x.RoleName == SEEDED_ROLES.SUPER_ADMIN)
+                    .FirstAsync();
+            }
 
             userAccount.UserRoleId = userRole.Id;
 

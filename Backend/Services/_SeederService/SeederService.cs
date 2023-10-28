@@ -1,5 +1,7 @@
 ﻿global using Backend.Contexts;
+using Backend.DTOs.UserDTOs.UserAccountDTOs;
 using Backend.Models.UserModels;
+using Backend.Services.AuthServices;
 using System.Reflection;
 
 namespace Backend.Services._SeederService
@@ -7,15 +9,18 @@ namespace Backend.Services._SeederService
     public class SeederService
     {
         private readonly DataContext _context;
+        private readonly IAuthService _authService;
 
-        public SeederService(DataContext context)
+        public SeederService(DataContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
 
         public bool SeedDB()
         {
             UserRoleSeeder();
+            UserAccountSeeder();
 
             return true;
         }
@@ -70,7 +75,13 @@ namespace Backend.Services._SeederService
                 return;
             }
 
-
+            _authService.RegisterUserAccount(new RegisterUserAccountDTO()
+            {
+                FirstName = "Super Admin",
+                Username = "SuperAdmin",
+                Password = "password",
+                IsSuperAdmin = true
+            }).Wait();
 
             Console.WriteLine("Super Admin Account Seeded");
         }

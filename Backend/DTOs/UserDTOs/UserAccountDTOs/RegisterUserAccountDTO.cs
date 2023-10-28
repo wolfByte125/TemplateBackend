@@ -1,4 +1,7 @@
-﻿namespace Backend.DTOs.UserDTOs.UserAccountDTOs
+﻿using Microsoft.Identity.Client;
+using System.Text.Json.Serialization;
+
+namespace Backend.DTOs.UserDTOs.UserAccountDTOs
 {
     public class RegisterUserAccountDTO
     {
@@ -15,5 +18,8 @@
         public string Username { get; set; } = null!;
 
         public string Password { get; set; } = null!;
+
+        [JsonIgnore]
+        public bool IsSuperAdmin { get; set; } = false;
     }
 }
