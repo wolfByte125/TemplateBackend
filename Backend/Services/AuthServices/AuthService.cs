@@ -1,12 +1,11 @@
-﻿using Backend.DTOs.AuthDTOs.LoginDTOs;
+﻿using AutoMapper;
+using Backend.DTOs.AuthDTOs.LoginDTOs;
 using Backend.DTOs.AuthDTOs.PasswordDTOs;
+using Backend.DTOs.UserDTOs.UserAccountDTOs;
 using Backend.Models.UserModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -18,17 +17,19 @@ namespace Backend.Services.AuthServices
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public UserAccount UserAccount { get; }
+        public UserAccount? UserAccount { get; }
         public UserRole UserRole { get; set; }
         public Permissions Permissions { get; set; }
 
         public AuthService(DataContext context, IHttpContextAccessor httpContextAccessor, 
-            IConfiguration configuration)
+            IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
+            _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
             UserAccount = context.UserAccounts
@@ -50,6 +51,41 @@ namespace Backend.Services.AuthServices
             }
 
             return result;
+        }
+
+        #region REGISTER | LOGIN
+        
+        // REGISTER
+        public async Task<UserAccount> RegisterUserAccount(RegisterUserAccountDTO registerDTO)
+        {
+            if (registerDTO.Password.Length < 8)
+                throw new InvalidOperationException("Password Is Too Short!");
+
+            CheckUsernameTaken(registerDTO.Username);
+
+            UserAccount userAccount = _mapper.Map<UserAccount>(registerDTO);
+
+            CreatePasswordHash(registerDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            userAccount.Password = "";
+            userAccount.PasswordHash = passwordHash;
+            userAccount.PasswordSalt = passwordSalt;
+
+            userAccount.Id = GenerateId();
+
+            #region ASSIGN USER ROLE
+            UserRole userRole = await _context.UserRoles
+                .Where(x => x.RoleName == SEEDED_ROLES.DEFAULT_ROLE)
+                .FirstAsync();
+
+            userAccount.UserRoleId = userRole.Id;
+
+            #endregion
+
+            _context.UserAccounts.Add(userAccount);
+            await _context.SaveChangesAsync();
+
+            return userAccount;
         }
 
         // LOGIN
@@ -81,8 +117,10 @@ namespace Backend.Services.AuthServices
             return returnDTO;
         }
 
+        #endregion
+
         #region MANAGE PASSWORD
-        
+
         // CHANGE PASSWORD
         public bool ChangePassword(ChangePasswordDTO changePasswordDTO)
         {
@@ -190,5 +228,31 @@ namespace Backend.Services.AuthServices
 
         #endregion
 
+        #region VALIDATORS | GENERATORS
+
+        public bool CheckUsernameTaken(string username)
+        {
+            UserAccount? existingUser = _context.UserAccounts.FirstOrDefault(u => u.Username == username);
+
+            if (existingUser != null)
+                throw new InvalidOperationException("Username Already Exists!");
+
+            return false;
+        }
+
+        private string GenerateId()
+        {
+
+            var id = Guid.NewGuid().ToString();
+
+            var existingUser = _context.UserAccounts.AsNoTracking().FirstOrDefault(u => u.Id == id);
+
+            if (existingUser != null) // if id exists generate again
+                return GenerateId();
+
+            return id;
+        }
+
+        #endregion
     }
 }

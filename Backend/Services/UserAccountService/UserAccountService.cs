@@ -22,39 +22,6 @@ namespace Backend.Services.UserAccountService
             _authService = authService;
         }
 
-        // REGISTER
-        public async Task<UserAccount> RegisterUserAccount(RegisterUserAccountDTO registerDTO)
-        {
-            if (registerDTO.Password.Length < 8)
-                throw new InvalidOperationException("Password Is Too Short!");
-
-            CheckUsernameTaken(registerDTO.Username);
-
-            UserAccount userAccount = _mapper.Map<UserAccount>(registerDTO);
-
-            _authService.CreatePasswordHash(registerDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-            userAccount.Password = "";
-            userAccount.PasswordHash = passwordHash;
-            userAccount.PasswordSalt = passwordSalt;
-
-            userAccount.Id = GenerateId();
-
-            #region ASSIGN USER ROLE
-            UserRole userRole = await _context.UserRoles
-                .Where(x => x.RoleName == SEEDED_ROLES.DEFAULT_ROLE)
-                .FirstAsync();
-
-            userAccount.UserRoleId = userRole.Id;
-
-            #endregion
-
-            _context.UserAccounts.Add(userAccount);
-            await _context.SaveChangesAsync();
-
-            return userAccount;
-        }
-                
         #region READS
         // READ BY ID
         public async Task<UserAccount> ReadUserAccountById(string id)

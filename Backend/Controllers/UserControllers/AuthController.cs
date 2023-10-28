@@ -1,5 +1,6 @@
 ﻿using Backend.DTOs.AuthDTOs.LoginDTOs;
 using Backend.DTOs.AuthDTOs.PasswordDTOs;
+using Backend.DTOs.UserDTOs.UserAccountDTOs;
 using Backend.Services.AuthServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,20 @@ namespace Backend.Controllers.UserControllers
         {
             var userName = _authService.GetMyName();
             return Ok(new { Status = true, UserName = userName });
+        }
+
+
+        [HttpPost("register")]
+        public async Task<ActionResult> RegisterUserAccount(RegisterUserAccountDTO registerDTO)
+        {
+            try
+            {
+                return Ok(await _authService.RegisterUserAccount(registerDTO));
+            }
+            catch (Exception ex)
+            {
+                return this.ParseException(ex);
+            }
         }
 
         [HttpPost("login")]

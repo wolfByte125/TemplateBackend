@@ -8,8 +8,8 @@ namespace Backend
     {
         public static void AddAppServices(this IServiceCollection services)
         {
+            services.AddScoped<SeederService>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<ISeederService, SeederService>();
             services.AddScoped<IUserAccountService, UserAccountService>();
         }
 

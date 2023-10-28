@@ -12,7 +12,6 @@ namespace Backend.Services.UserAccountService
         Task<UserAccount> DeleteUserAccount(string id);
         Task<UserAccount> ReadUserAccountById(string id);
         Task<List<UserAccount>> ReadUserAccounts(FilterUserAccountDTO filterDTO);
-        Task<UserAccount> RegisterUserAccount(RegisterUserAccountDTO registerDTO);
         Task<UserAccount> UpdateUserAccount(UpdateUserAccountDTO updateDTO);
     }
 }

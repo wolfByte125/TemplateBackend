@@ -1,5 +1,6 @@
 using Backend;
 using Backend.Contexts;
+using Backend.Services._SeederService;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Text.Json.Serialization;
@@ -24,7 +25,14 @@ builder.Services.AddCors(options =>
 // Add DB
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 10,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null);
+        });
 });
 
 // Add services to the container.
@@ -44,6 +52,14 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddAppServices();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var context = serviceProvider.GetRequiredService<DataContext>();
+    context.Database.Migrate();
+    serviceProvider.GetRequiredService<SeederService>().SeedDB();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

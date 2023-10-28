@@ -1,5 +1,6 @@
 ﻿using Backend.DTOs.AuthDTOs.LoginDTOs;
 using Backend.DTOs.AuthDTOs.PasswordDTOs;
+using Backend.DTOs.UserDTOs.UserAccountDTOs;
 using Backend.Models.UserModels;
 
 namespace Backend.Services.AuthServices
@@ -14,6 +15,7 @@ namespace Backend.Services.AuthServices
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         string GetMyName();
         LoginReturnDTO Login(LoginDTO loginDTO);
+        Task<UserAccount> RegisterUserAccount(RegisterUserAccountDTO registerDTO);
         bool ResetPassword(ResetPasswordDTO resetPasswordDTO);
     }
 }

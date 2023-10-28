@@ -17,19 +17,6 @@ namespace Backend.Controllers.UserControllers
             _userAccountService = userAccountService;
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult> RegisterUserAccount(RegisterUserAccountDTO registerDTO)
-        {
-            try
-            {
-                return Ok(await _userAccountService.RegisterUserAccount(registerDTO));
-            }
-            catch (Exception ex)
-            {
-                return this.ParseException(ex);
-            }
-        }
-
         #region READS
 
         [HttpGet("{id}")]

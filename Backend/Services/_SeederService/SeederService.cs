@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Backend.Services._SeederService
 {
-    public class SeederService : ISeederService
+    public class SeederService
     {
         private readonly DataContext _context;
 
@@ -24,7 +24,7 @@ namespace Backend.Services._SeederService
 
         public void UserRoleSeeder()
         {
-            if (_context.UserAccounts.Any())
+            if (_context.UserAccounts.Any() && _context.UserRoles.Any())
             {
                 return;
             }
@@ -57,6 +57,9 @@ namespace Backend.Services._SeederService
                 Permissions = new(),
             });
 
+            _context.UserRoles.AddRange(userRoles);
+            _context.SaveChanges();
+
             Console.WriteLine("User Role Seeded");
         }
 
@@ -68,6 +71,8 @@ namespace Backend.Services._SeederService
             }
 
 
+
+            Console.WriteLine("Super Admin Account Seeded");
         }
 
         #endregion
