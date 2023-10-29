@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Backend.Contexts;
 using Backend.DTOs.UserDTOs.UserAccountDTOs;
+using Backend.DTOs.UserDTOs.UserRoleDTOs;
 using Backend.Models.UserModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Security;
 
 namespace Backend.Utils
 {
@@ -22,6 +25,9 @@ namespace Backend.Utils
             CreateMap<UpdateUserAccountDTO, UserAccount>();
 
             // USER ROLE
+            CreateMap<CreateUserRoleDTO, UserRole>();
+            CreateMap<UserRole, UserRole>();
+            CreateMap<Permissions, Permissions>();
 
             // BAN USER ACCOUNT
             CreateMap<BanUserAccountDTO, BannedAccount>();

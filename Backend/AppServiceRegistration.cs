@@ -8,6 +8,13 @@ namespace Backend
     {
         public static void AddAppServices(this IServiceCollection services)
         {
+            // ADD AUTHORIZATION POLICY
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(AUTHORIZATION.EXCLUDE_INACTIVE, policy => policy.AddRequirements(new CustomRoleRequirement()));
+            });
+
+            // SERVICES
             services.AddScoped<SeederService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserAccountService, UserAccountService>();
