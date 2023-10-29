@@ -1,6 +1,8 @@
 # Template Backend
 This is a template backend project built using `ASP .NET` with basic features.
 
+`dotnet v7`
+
 ## Details
 ### Packages Installed
 > - AutoMapper (Dependency Injection) v12.0.1
