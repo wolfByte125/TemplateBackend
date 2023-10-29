@@ -3,8 +3,8 @@ This is a template backend project built using `ASP .NET` with basic features.
 
 ## Details
 ### Packages Installed
-> AutoMapper (Dependency Injection) v12.0.1
-> Authentication (JWT Bearer) v7.0.13
+> - AutoMapper (Dependency Injection) v12.0.1
+> - Authentication (JWT Bearer) v7.0.13
 > Entity Framework Core v7.0.13
 > Entity Framework Core (Design) v7.0.13
 > Entity Framework Core (SQL Server) v7.0.13
