@@ -1,6 +1,8 @@
 # Template Backend
 This is a template backend project built using `ASP .NET` with basic features.
 
+`TESTING IN PROGRESS`
+
 `dotnet v7`
 
 ## Details
