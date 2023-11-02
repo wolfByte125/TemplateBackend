@@ -1,6 +1,8 @@
 ﻿using Backend.Services._SeederService;
 using Backend.Services.AuthServices;
+using Backend.Services.NotificationServices;
 using Backend.Services.UserAccountService;
+using Microsoft.AspNetCore.Routing.Matching;
 
 namespace Backend
 {
@@ -16,8 +18,13 @@ namespace Backend
 
             // SERVICES
             services.AddScoped<SeederService>();
+
             services.AddScoped<IAuthService, AuthService>();
+
             services.AddScoped<IUserAccountService, UserAccountService>();
+
+            services.AddScoped<INotificationService, NotificationService>();
+
         }
 
         

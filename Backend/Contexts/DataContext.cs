@@ -1,4 +1,5 @@
 ﻿global using Backend.Utils;
+using Backend.Models.NotificationModels;
 using Backend.Models.UserModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -23,6 +24,11 @@ namespace Backend.Contexts
 
         #endregion
 
+        #region NOTIFICATION TABLES
+
+        public DbSet<Notification> Notifications { get; set; }
+
+        #endregion
 
 
 

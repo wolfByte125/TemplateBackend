@@ -4,6 +4,7 @@ namespace Backend.Utils
 {
     public class Constants
     {
+
     }
 
     public class SEEDED_ROLES
@@ -24,5 +25,21 @@ namespace Backend.Utils
         public const string ACTIVE = "Active";
         public const string BANNED = "Banned";
         public const string DELETED = "Deleted";
+    }
+
+    public class GENDER
+    {
+        public const string MALE = "Male";
+        public const string FEMALE = "Female";
+    }
+
+    public class NOTIFICATION_TYPE
+    {
+        public const string DEMO = "Demo";
+    }
+
+    public class NOTIFICATION_DETAIL
+    {
+        public const string DEMO_NOTIFICATION = "Demo Notification";
     }
 }
